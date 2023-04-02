@@ -1,5 +1,7 @@
-## Installing
+## AnkerMake-M5 Fan
 
-Check if you have a v1, v2 or v3(clone) board. 
+## Setup
 
-If using a v2 board, change the LED pin in platform.ini to pin 0.
+Install circuit python 8.0.5
+
+https://circuitpython.org/board/waveshare_rp2040_zero/
