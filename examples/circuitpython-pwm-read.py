@@ -1,3 +1,8 @@
+# Read a PWM signal
+# Note that this isn't super accurate, especially with low duty cycles at high frequencies
+# A better apporach is to use micropython with the PIO assemtpy
+
+
 import board
 import neopixel
 import pulseio
@@ -48,7 +53,7 @@ while True:
             print("Frequency: {:.2f} Hz, Duty Cycle: {:.2f}%".format(frequency, duty_cycle))
         pwm_reader.clear()
 
-## NOte this code _mostly_ works, but sometimes get the frequency wrong
+## Note this code _mostly_ works, but sometimes get the frequency wrong
 #Here is an example, where everything should read 20000
 # Frequency: 14285.71 Hz, Duty Cycle: 50.00%
 # Frequency: 32258.06 Hz, Duty Cycle: 51.61%
