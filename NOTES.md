@@ -56,3 +56,5 @@ It is even possible to use esp-home to do this which would be crazy awesome
 ## ESPHome
 
 ESPHome has native support for writing PWM and there _might_ be a library for eading PWM
+
+

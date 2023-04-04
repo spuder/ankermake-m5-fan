@@ -1,0 +1,22 @@
+esphome:
+  name: d1_mini_pwm
+  platform: ESP8266
+  board: d1_mini
+
+output:
+  - platform: esp8266_pwm
+    id: pwm_output
+    pin: GPIO5
+    frequency: 20kHz
+
+  - platform: gpio
+    id: led_output
+    pin:
+      number: GPIO2
+      inverted: True
+
+globals:
+  - id: pwm_level
+    type: float
+    restore_value: no
+    initial_value: '0.0'
