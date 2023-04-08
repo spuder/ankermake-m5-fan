@@ -1,0 +1,77 @@
+esphome:
+  name: esphome-web-737c86 #TODO change this
+  friendly_name: AnkerMake-M5
+  # platform: ESP32
+  # board: nodemcu-32s
+
+esp32:
+  board: esp32-c3-devkitm-1
+  framework:
+    type: arduino
+    version: 2.0.5
+    platform_version: 5.2.0
+
+  # board: nodeemcu-32s
+  # variant: esp32c3
+  # board: esp32c3dev
+  # variant: esp32c3
+
+
+# Enable logging
+logger:
+
+ # Enable Home Assistant API
+api:
+  encryption:
+    key: "m63DOv3YOthIXl/9Dwqwfr08mifBVZRXubf6lSDNWDE="
+    #TODO: remove this
+
+ota:
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  #TODO: con't commit this
+  ap:
+    ssid: "Esphome-Web-737C86"
+    password: "9miZnLbZX9Xf"
+
+captive_portal:
+    
+#-----------------------------------------
+
+
+# https://templates.blakadder.com/luatos_CORE-ESP32.html
+
+#TODO: onboot default pin to on for safety
+
+web_server:
+  port: 80
+
+# # PWM input
+# remote_receiver:
+#   pin:
+#     number: IO6 # pin 22
+#     mode: INPUT_PULLUP
+#     inverted: True
+#   dump: all
+
+# Status LEDs
+output:
+  - platform: gpio
+    # pin: GPIO12
+    pin: D4
+    id: status_led_1
+  # - platform: gpio
+  #   pin: GPIO13
+  #   id: status_led_2
+
+light:
+  - platform: binary
+    name: "Status LED 1"
+    output: status_led_1
+  - platform: binary
+    name: "Status LED 2"
+    output: status_led_2

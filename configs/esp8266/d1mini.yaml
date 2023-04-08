@@ -1,0 +1,124 @@
+esp8266:
+  board: d1_mini
+
+
+substitutions:
+  name: "foobar1"
+
+esphome:
+  name: "${name}"
+
+web_server:
+  port: 80
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+logger:
+
+api:
+
+ota:
+
+# USB Ports are connected to GPIO pins through Logic Level Mosfets
+# D8 = USB 1
+# D7 = USB 2
+# D6 = USB 3
+# D5 = USB 4
+# switch:
+#   - platform: gpio
+#     pin: D8
+#     name: "USB 1"
+#     id: "usb_1"
+#   - platform: gpio
+#     pin: D7
+#     name: "USB 2"
+#     id: "usb_2"
+#   - platform: gpio
+#     pin: D6
+#     name: "USB 3"
+#     id: "usb_3"
+#   - platform: gpio
+#     pin: D5
+#     name: "USB 4"
+#     id: "usb_4"
+
+# Status LED light is on Pin D4
+# Pin D4 is shared with the wifi reset button on the USB-Timer PCB
+# You can choose to use status_led or wifi reset but not both
+# light: 
+#   - platform: status_led
+#     name: "USB-Timer State"
+#     pin: 
+#       number: D4
+#       inverted: true
+
+output:
+  - platform: gpio
+    pin: D4
+    id: led_pin
+
+# TODO: fix this being inverted
+light:
+  - platform: binary
+    name: "LED"
+    output: led_pin
+
+# The ESP8266 has a max PWM frequency of 1KHz
+# The ankermake M5 uses a 20KHz PWM frequency
+# Many common fans use a 25KHz PWM frequency
+# Use an ESP32 if you need a higher PWM frequency
+sensor:
+  - platform: pulse_width
+    pin: D8
+    name: Fan Duty Cycle
+    update_interval: 2s
+    filters:
+      # - lambda: return (x / (10.0 / 1000000.0 * 100.0)) * 100.0; #This works perfectly as long as signal is exaclty 1khz
+      - lambda: |-
+          auto frequency = 1.0 / (10.0 / 1000000.0);
+          auto period = 1.0 / frequency;
+          return (x / period) * 100.0 / 100.0;
+    unit_of_measurement: '%'
+    accuracy_decimals: 0
+
+# fan:
+#   - platform: speed
+#     output: D5
+#     name: "Heat Sink Fan"
+
+  # - platform: pulse_counter
+  #   pin: D8
+  #   name: "PWM Input"
+  #   unit_of_measurement: "%"
+  #   filters:
+  #     - lambda: |-
+  #         if (x > 0 && x < 1) {  // Sometimes the pulse counter reads a false positive
+  #           return 0;
+  #         }
+  #         else {
+  #           return x;
+  #         }
+  #     - lambda: |-
+  #         float duty_cycle = (x * 100) / (id(pulse_duration).state * id(frequency).state);
+  #         return duty_cycle;
+
+
+  # - platform: pulse_width
+  #   pin: D8
+  #   name: "PWM Pulse Duration"
+  #   id: pulse_duration
+
+  # - platform: custom
+  #   lambda: |-
+  #     auto frequency_sensor = new FrequencySensor(D8);
+  #     App.register_component(frequency_sensor);
+  #     return {frequency_sensor};
+  #   sensors:
+  #     - name: "PWM Frequency"
+  #       id: frequency
+  #       unit_of_measurement: "Hz"
+  #       accuracy_decimals: 2
+  #       # interval: 1s
+  #       # update_interval: 1s
