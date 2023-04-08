@@ -115,7 +115,6 @@ web_server:
 #       # Set the following filter value based on your specific hardware timer's frequency
 #     # filter: 13us
 
-
 # output:
 #   - platform: ledc
 #     pin: 18
@@ -163,3 +162,43 @@ light:
           speed: 10
           width: 100
       - addressable_color_wipe:
+
+# Button 0
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: 0
+      mode: INPUT_PULLUP
+      inverted: true
+    name: "Fan Button"
+    on_press:
+      then:
+        - state_machine.transition: TOGGLE
+    on_release:
+      then:
+        - logger.log: "Fan Button Released"
+
+## State Machine
+#----------------
+external_components:
+  - source:
+      type: git
+      url: https://github.com/muxa/esphome-state-machine
+
+state_machine:
+  - name: Fan Mode
+    states:
+    - "NORMAL"
+    - "SILENCED"
+    # TODO: Boost mode? 
+    initial_state: NORMAL
+    # diagram: mermaid
+    inputs:
+      - name: TOGGLE
+        transitions:
+          - NORMAL -> SILENCED
+          - SILENCED -> NORMAL
+
+text_sensor:
+  - platform: state_machine
+    name: Fan Mode
